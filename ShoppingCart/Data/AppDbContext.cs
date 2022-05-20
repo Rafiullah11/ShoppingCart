@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ShoppingCart.Models;
 
 namespace ShoppingCart.Data
 {
@@ -8,5 +9,6 @@ namespace ShoppingCart.Data
         {
                 
         }
+        public DbSet<Page> Pages { get; set; }
     }
 }

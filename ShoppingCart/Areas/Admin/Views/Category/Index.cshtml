@@ -1,0 +1,61 @@
+﻿@model IEnumerable<ShoppingCart.Models.Category>
+
+@{
+    ViewData["Title"] = "Category";
+}
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-9">
+            <h3 class="text-primary">Categories List</h3>
+        </div>
+        <div class="col-3 text-right">
+            <a asp-action="Create" asp-controller="Category" class="btn btn-primary"> Add New Category</a>
+        </div>
+    </div>
+    <table class="table sorting table-bordered table-striped" id="category" style="width:100%">
+    <thead>
+        <tr>
+           
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+           
+            <th>Action</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr id="id_@item.Id">
+          
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+           
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id" >Edit</a>|
+               
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        
+                
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+</div>
+@section Scripts {
+  <script>
+$("table#category tbody").sortable({
+    items:"tr:not(.home)",
+    placeolder:"ui-state-highlight",
+    update: function() {
+        let ids = $("table#category tbody").sortable("serialize");
+        let url = "/admin/category/reorder";
+
+        $.post(url, ids, function() { });
+    }
+})
+  </script>
+}

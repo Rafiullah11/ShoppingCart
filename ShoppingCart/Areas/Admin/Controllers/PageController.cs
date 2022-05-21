@@ -17,6 +17,7 @@ namespace ShoppingCart.Areas.Admin.Controllers
         {
             _db = db;
         }
+        //Admin/Page/Index
         public async Task<IActionResult> Index()
         {
             IQueryable<Page> pages = from p in _db.Pages orderby p.Sorting select p;
@@ -24,7 +25,7 @@ namespace ShoppingCart.Areas.Admin.Controllers
             return View(list);
         }
         [HttpGet]
-        //GetMethod/Detail/5
+        //Get Admin/Page/Detail/5
         public async Task<IActionResult> Detail(int id)
         {
             var page = await _db.Pages.FirstOrDefaultAsync(page=>page.Id==id);
@@ -36,14 +37,14 @@ namespace ShoppingCart.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        //GetMthod/Create
+        //Get Admin/Page/Create
         public IActionResult Create()
         {
             return View();
         }
         
         [HttpPost]
-        //Create/Post
+        //Post Admin/Page/Create
         public async Task<IActionResult> Create(Page model)
         {
             if (ModelState.IsValid)
@@ -64,7 +65,7 @@ namespace ShoppingCart.Areas.Admin.Controllers
             return View(model);
         }
         [HttpGet]
-        //Edit/Get/5
+        //Get Admin/Page/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             var model = await _db.Pages.FirstOrDefaultAsync(page=>page.Id==id);
@@ -76,7 +77,7 @@ namespace ShoppingCart.Areas.Admin.Controllers
         }
         
         [HttpPost]
-        //Create/Post
+        //Post Admin/Page/Edit/5
         public async Task<IActionResult> Edit(Page model)
         {
             if (ModelState.IsValid)
@@ -92,7 +93,7 @@ namespace ShoppingCart.Areas.Admin.Controllers
         }
         
         [HttpGet]
-        //Delete/Get/5
+        //Get Delete/Get/5
         public async Task<IActionResult> Delete(int id)
         {
             var model = await _db.Pages.FirstOrDefaultAsync(page=>page.Id==id);
@@ -104,7 +105,7 @@ namespace ShoppingCart.Areas.Admin.Controllers
         }
         
         [HttpPost]
-        //Delete/Post
+        //Post Delete/Get/5
         public async Task<IActionResult> Delete(Page model)
         {
             if (model!=null)
@@ -116,6 +117,20 @@ namespace ShoppingCart.Areas.Admin.Controllers
             }
             return View(model);
         }
-
+        [HttpPost]
+        // Post Admin/Page/Reorder
+        public async Task<IActionResult> Reorder(int[] id)
+        {
+            int count = 1;
+            foreach (var pageId in id)
+            {
+                var page = await _db.Pages.FindAsync(pageId);
+                page.Sorting = count;
+                _db.Update(page);
+                await _db.SaveChangesAsync();
+                count++;
+            }
+            return Ok();
+        }
     }
 }

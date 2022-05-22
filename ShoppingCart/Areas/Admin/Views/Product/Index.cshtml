@@ -1,0 +1,66 @@
+﻿@model IEnumerable<ShoppingCart.Models.Product>
+
+<div class="container border pt-3 pb-2">
+    <div class="row">
+        <div class="col-md-6">
+
+            <h2 class="text-primary">Product List</h2>
+
+        </div>
+        <div class="col-md-6 text-right">
+
+            <a asp-action="Create" class="btn btn-primary">Create New Product</a>
+
+        </div>
+    </div>
+
+
+    @if (Model.Count() > 0)
+    {
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Image</th>
+                    <th>Category</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Name
+                        </td>
+                      
+                        <td>
+                            @item.Description
+                        </td>
+                        <td>
+                            @item.Price
+                        </td>
+                        <td>
+                            image
+                        </td>
+                        <td>
+                            @item.Category.Name
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+    </table>
+    }
+    else
+    {
+    <h5 class="text-center">there is no record found</h5>
+    }
+</div>

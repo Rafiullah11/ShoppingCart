@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using ShoppingCart.Data;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ShoppingCart.Models
@@ -13,8 +15,15 @@ namespace ShoppingCart.Models
         public string Description { get; set; }
         [Column(TypeName ="decimal(18,2)")]
         public decimal Price { get; set; }
+
+        [Display(Name ="Category")]
+        [Range(1,int.MaxValue, ErrorMessage = "Choose Category please")]
         public int CategoryId { get; set; }
         public string Image { get; set; }
+        
+        [NotMapped]
+        [FileExtension]
+        public IFormFile ImageUpload { get; set; }
         [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; }
     }

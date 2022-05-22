@@ -1,11 +1,13 @@
 ﻿@model ShoppingCart.Models.Category
 
-@{
-    ViewData["Title"] = "Create Category";
-}
 
 <form asp-action="Create">
-    <div class="border p-3 mt-4">
+   <div class="container border pt-3">
+        <div class="form-group row pl-3">
+            <h3 class="text-primary">Add Category</h3>
+        </div>
+        <div class="row">
+            <div class="col-12">
         <div class="row mb-2 ml-2">
             <h3 class="text-primary">Add New Category</h3>
             <hr />
@@ -18,10 +20,18 @@
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
-          <div class="mb-3">
-        <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
+            <div class="form-group">
+                    <div class=" col-8 offset-2 row">
+                        <div class="col">
+                            <input type="submit" value="Create" class="btn btn-primary w-75" />
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-danger w-75">Back</a>
 
-        <a asp-action="Index" asp-controller="Category" class="btn btn-secondary" style="width:150px">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </form>

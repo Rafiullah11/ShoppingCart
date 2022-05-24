@@ -32,7 +32,11 @@ namespace ShoppingCart.Areas.Admin.Controllers
                                             .Include(x => x.Category)
                                             .Skip((p - 1) * pageSize)
                                             .Take(pageSize);
-                                            
+
+            ViewBag.PageNumber = p;
+            ViewBag.PageRange = pageSize;
+            ViewBag.TotalPages = (int)Math.Ceiling((decimal)_context.Products.Count() / pageSize);
+
             return View(await product.ToListAsync());
             //var appDbContext = _context.Products.Include(p => p.Category);
             //return View(await appDbContext.ToListAsync());
@@ -67,8 +71,6 @@ namespace ShoppingCart.Areas.Admin.Controllers
         }
 
         // POST: Admin/Product/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         //[HttpPost]
         //[ValidateAntiForgeryToken]
         //public async Task<IActionResult> Create([Bind("Id,Name,Slug,Description,Price,CategoryId,Image")] Product product)
@@ -119,6 +121,7 @@ namespace ShoppingCart.Areas.Admin.Controllers
         }
 
         // GET: Admin/Product/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -131,43 +134,57 @@ namespace ShoppingCart.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
+            ViewBag.CategoryId = new SelectList(_context.Categories.OrderBy(x => x.Sorting), "Id", "Name",product.CategoryId);
+
+            //ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
             return View(product);
         }
 
-        // POST: Admin/Product/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //POST: Admin/Product/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Slug,Description,Price,CategoryId,Image")] Product product)
+        public async Task<IActionResult> Edit(int id, Product product)
         {
+            ViewBag.CategoryId = new SelectList(_context.Categories.OrderBy(x => x.Sorting), "Id", "Name", product.CategoryId);
+
             if (id != product.Id)
             {
                 return NotFound();
             }
-
             if (ModelState.IsValid)
             {
-                try
+                product.Slug = product.Name.ToLower().Replace(" ", "-");
+                var slug = await _context.Products.Where(x=>x.Id!=id).FirstOrDefaultAsync(x => x.Slug == product.Slug);
+                if (slug != null)
                 {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
+                    ModelState.AddModelError("", "Product already exist..");
+                    return View(product);
                 }
-                catch (DbUpdateConcurrencyException)
+                if (product.ImageUpload != null)
                 {
-                    if (!ProductExists(product.Id))
+                    string uploadDir = Path.Combine(hostEnvironment.WebRootPath, "media/products");
+                    if (!string.Equals(product.Image,"noimage.png"))
                     {
-                        return NotFound();
+                        string oldImage = Path.Combine(uploadDir,product.Image);
+                        if (System.IO.File.Exists(oldImage))
+                        {
+                            System.IO.File.Delete(oldImage);
+                        }
                     }
-                    else
-                    {
-                        throw;
-                    }
+                    string imageName = Guid.NewGuid().ToString() + "_" + product.ImageUpload.FileName;
+                    string filePath = Path.Combine(uploadDir, imageName);
+                    FileStream fs = new FileStream(filePath, FileMode.Create);
+                    await product.ImageUpload.CopyToAsync(fs);
+                    fs.Close();
+                    product.Image = imageName;
+
                 }
-                return RedirectToAction(nameof(Index));
+
+                _context.Update(product);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Record Updated succefully..";
+                return RedirectToAction("Index");
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
             return View(product);
         }
 
@@ -196,9 +213,29 @@ namespace ShoppingCart.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Products.FindAsync(id);
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if (product==null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                string uploadDir = Path.Combine(hostEnvironment.WebRootPath, "media/products");
+                if (!string.Equals(product.Image, "noimage.png"))
+                {
+                    string oldImage = Path.Combine(uploadDir, product.Image);
+                    if (System.IO.File.Exists(oldImage))
+                    {
+                        System.IO.File.Delete(oldImage);
+                    }
+                }
+
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Record Deleted succefully..";
+
+                return RedirectToAction(nameof(Index));
+            }
+        
         }
 
         private bool ProductExists(int id)

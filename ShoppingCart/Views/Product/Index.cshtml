@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Product>
+
+    <div class="container border-primary">
+<h2 class="display-4 pb-2 text-center text-primary"> All Product</h2>
+<div class="row offset-1">
+
+    @foreach (var item in Model)
+    {
+        <div class="card  border-secondary m-1 " style="width: 18rem; height:35rem;">
+            <img src="~/media/products/@item.Image" class="card-img-top" alt="...">
+            <div class="card-body">
+                @*<h6 class="card-title"><strong>Type : </strong>@item.Name</h6>*@
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Type : </strong>@item.Name</li>
+                <li class="list-group-item"><strong>Description : </strong>@item.Description</li>
+                <li class="list-group-item"><strong>Price : </strong>@item.Price.ToString("C2")</li>
+                <li class="list-group-item"><a href="#" class="card-link btn btn-primary">Add to Card</a></li>
+            </ul>
+            
+        </div>
+    }
+
+</div>
+</div>
+
+@*
+   @foreach (var item in Model)
+    {
+        <div class="col-4 border">
+            <img src="~/media/products/@item.Image" class="img-fluid" alt=""/>
+            <h4>@item.Name</h4>
+            <div>
+                @Html.Raw(item.Description)
+            </div>
+           <p> @item.Price.ToString("C2")</p>
+           <p><a asp-action="" asp-controller="" class="btn btn-primary">Add To Cart</a></p>
+        </div>
+    }*@

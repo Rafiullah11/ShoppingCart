@@ -52,6 +52,16 @@ namespace ShoppingCart
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                    "page",
+                    "{slug?}",
+                    defaults: new {controller= "Page", action="Pages"}
+                    );
+                endpoints.MapControllerRoute(
+                    "product",
+                    "product/{categorySlug}",
+                    defaults: new {controller= "Product", action= "ProductByCategory" }
+                    );
+                endpoints.MapControllerRoute(
                 name: "areas",
                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
                  );

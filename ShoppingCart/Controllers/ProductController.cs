@@ -16,6 +16,7 @@ namespace ShoppingCart.Controllers
         {
             _db = db;
         }
+        //Get/product
         public async Task<IActionResult> Index(int p = 1)
         {
             int pageSize = 6;
@@ -29,9 +30,9 @@ namespace ShoppingCart.Controllers
 
             return View(await product.ToListAsync());
         }
-        
+        //Get/ProductByCategory
         public async Task<IActionResult> ProductByCategory(string categorySlug, int p = 1)
-        {
+        { 
             Category category =await _db.Categories.Where(x=>x.Slug==categorySlug).FirstOrDefaultAsync();
             if (category == null) return RedirectToAction("Index");
 
@@ -47,7 +48,7 @@ namespace ShoppingCart.Controllers
                                             
             ViewBag.TotalPages = (int)Math.Ceiling((decimal)_db.Products.Where(x => x.CategoryId == category.Id).Count() / pageSize);
             ViewBag.CategoryName = category.Name;
-
+            ViewBag.CategorySlug = categorySlug;
             return View(await product.ToListAsync());
         }
 

@@ -25,6 +25,10 @@ namespace ShoppingCart
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMemoryCache();
+            services.AddSession(option => { }
+            //option.IdleTimeout=TimeSpan.FromSeconds(2)
+                );
             services.AddControllersWithViews();
             services.AddDbContext<AppDbContext>(option => option.UseSqlServer(Configuration.GetConnectionString("conn")));
         }
@@ -47,20 +51,22 @@ namespace ShoppingCart
 
             app.UseRouting();
 
+            app.UseSession();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    "page",
-                    "{slug?}",
-                    defaults: new {controller= "Page", action="Pages"}
-                    );
-                endpoints.MapControllerRoute(
-                    "product",
-                    "product/{categorySlug}",
-                    defaults: new {controller= "Product", action= "ProductByCategory" }
-                    );
+                //endpoints.MapControllerRoute(
+                //    "page",
+                //    "{slug?}",
+                //    defaults: new {controller="Page", action="Pages"}
+                //    );
+                //endpoints.MapControllerRoute(
+                //    "product",
+                //    "product/{categorySlug}",
+                //    defaults: new {controller= "Product", action="ProductByCategory" }
+                //    );
                 endpoints.MapControllerRoute(
                 name: "areas",
                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"

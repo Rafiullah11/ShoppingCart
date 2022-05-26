@@ -42,7 +42,12 @@ namespace ShoppingCart.Controllers
             }
             HttpContext.Session.SetJson("Cart",cart);
 
-            return RedirectToAction("Index");
+            if (HttpContext.Request.Headers["X-Requested-With"] != "XMLHttpRequest")
+            {
+                return RedirectToAction("Index");
+
+            }
+            return ViewComponent("SmallCart");
         }
         public IActionResult Decrease(int id)
         {
@@ -88,8 +93,11 @@ namespace ShoppingCart.Controllers
         public IActionResult Clear()
         {
             HttpContext.Session.Remove("Cart");
-          
-            return RedirectToAction("Index");
+
+            //return RedirectToAction("Index");
+            //return RedirectToAction("Pages","Page");
+            return Redirect(Request.Headers["Referer"].ToString());
+
         }
     }
 }

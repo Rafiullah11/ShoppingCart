@@ -14,23 +14,21 @@ namespace ShoppingCart.Controllers
         {
             _db = db;
         }
-        public async Task<IActionResult> Pages(string slug)
+        // GET / or /slug
+        public async Task<IActionResult> Page(string slug)
         {
-            if (slug ==null)
+            if (slug == null)
             {
                 return View(await _db.Pages.Where(x => x.Slug == "home").FirstOrDefaultAsync());
             }
 
-            var page = await _db.Pages.Where(x => x.Slug == slug).FirstOrDefaultAsync();
-            if (page==null)
+            Page page = await _db.Pages.Where(x => x.Slug == slug).FirstOrDefaultAsync();
+
+            if (page == null)
             {
                 return NotFound();
             }
-            //else
-            //{
-            //    return View(page);
 
-            //}
             return View(page);
         }
     }

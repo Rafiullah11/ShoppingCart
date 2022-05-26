@@ -1,20 +1,19 @@
 ﻿@model IEnumerable<Product>
 
 @{
-    ViewData["Title"] = "Product";
+    ViewData["Title"] = "ProductsByCategory";
 }
 <div class="container border-primary">
-    <h2 class="display-4 pb-2 text-center text-primary"> All Product</h2>
+    <h2 class="display-4 pb-2 text-center text-primary"> @ViewBag.CategoryName</h2>
     <div class="row">
 
         @foreach (var item in Model)
         {
             <div class="card  border-secondary m-1 " style="width: 14rem;">
-                <div class="ajaxbg d-none">
-                    <img src="~/images/ajax-loader.gif" />
-                    <p class="lead alert alert-success text-center d-none">the product has been added..</p>
-                </div>
-
+                 <div class="ajaxbg d-none">
+                <img src="~/images/ajax-loader.gif"/>
+                <p class="lead alert alert-success text-center d-none">the product has been added..</p>
+            </div>
                 <img src="~/media/products/@item.Image" class="card-img-top" alt="...">
                 <div class="card-body">
                 </div>
@@ -22,21 +21,23 @@
                     <li class="list-group-item"><strong>Type : </strong>@item.Name</li>
                     <li class="list-group-item"><strong>Description : </strong>@item.Description</li>
                     <li class="list-group-item"><strong>Price : </strong>@item.Price.ToString("C2")</li>
-                    <li class="list-group-item">
-                        <a asp-controller="Cart" asp-action="Add" asp-route-id="@item.Id" data-id="@item.Id"
-                       class="card-link btn btn-primary addToCart">Add to Card</a>
-                    </li>
+                    <li class="list-group-item"><a asp-controller="Cart" asp-action="Add" asp-route-id="@item.Id"
+                        data-id="@item.Id" class="card-link btn btn-primary addToCart">Add to Card</a></li>
                 </ul>
 
             </div>
         }
 
     </div>
+   
 </div>
-<div class="d-flex w-100 justify-content-center pt-2">
-    <pagination page-count="@ViewBag.TotalPages" page-target="/product"
-     page-number="@ViewBag.PageNumber" page-range="@ViewBag.PageRange"></pagination>
-</div>
+@if (ViewBag.TotalPages > 1)
+{
+    <div class="d-flex w-100 justify-content-center pt-2">
+        <pagination  page-count="@ViewBag.TotalPages" page-target="/product/@ViewBag.CategorySlug"
+         page-number="@ViewBag.PageNumber" page-range="@ViewBag.PageRange"></pagination>
+    </div>
+}
 
 
 @section Scripts {
@@ -69,19 +70,3 @@
 </script>
 
 }
-
-
-
-    @*
-   @foreach (var item in Model)
-    {
-        <div class="col-4 border">
-            <img src="~/media/products/@item.Image" class="img-fluid" alt=""/>
-            <h4>@item.Name</h4>
-            <div>
-                @Html.Raw(item.Description)
-            </div>
-           <p> @item.Price.ToString("C2")</p>
-           <p><a asp-action="" asp-controller="" class="btn btn-primary">Add To Cart</a></p>
-        </div>
-    }*@

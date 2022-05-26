@@ -1,12 +1,12 @@
 ﻿@model IEnumerable<Category>
-<ul class="list-group">
+<ul class="list-group bg-secondory">
        <li class="list-group-item">
-           <a class="nav-link text-dark"  asp-controller="Product" asp-action="Index">All Products</a>
+           <a class="nav-link text-dark" asp-area=""  asp-controller="Product" asp-action="Index">All Products</a>
        </li>
     @foreach (var item in Model)
     {
             <li class="list-group-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ProductByCategory" 
+                <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ProductsByCategory" 
                 asp-route-categorySlug="@item.Slug">
                     @item.Name
                 </a>

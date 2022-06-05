@@ -3,12 +3,8 @@
   "defaultProvider": "cdnjs",
   "libraries": [
     {
-      "library": "ckeditor5@34.0.0",
-      "destination": "wwwroot/lib/ckeditor5/"
-    },
-    {
-      "library": "jqueryui@1.12.1",
-      "destination": "wwwroot/lib/jqueryui/"
+      "library": "bootstrap@5.1.3",
+      "destination": "wwwroot/lib/bootstrap/"
     }
   ]
 }

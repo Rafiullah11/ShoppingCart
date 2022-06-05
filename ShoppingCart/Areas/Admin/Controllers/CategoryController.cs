@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShoppingCart.Data;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace ShoppingCart.Areas.Admin.Controllers
 {
+    [Authorize(Roles ="admin")]
     [Area("Admin")]
     public class CategoryController : Controller
     {
